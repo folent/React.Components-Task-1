@@ -1,0 +1,16 @@
+.card {
+  width: 30%;
+  box-shadow: 0 0 6px 2px #cccccc;
+  padding: 10px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.card img {
+  width: 100%;
+}
+
+.card p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
