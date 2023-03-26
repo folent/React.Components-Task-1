@@ -4,8 +4,8 @@ import cards from '../../db/data.json';
 import SearchBox from '../../components/SearchBox/SearchBox';
 import { IStateHomePage } from './IStateHomePage';
 
-class HomePage extends React.Component<null, IStateHomePage> {
-  constructor(props: never) {
+class HomePage extends React.Component<object, IStateHomePage> {
+  constructor(props: object) {
     super(props);
     this.state = {
       items: [],
