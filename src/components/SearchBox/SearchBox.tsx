@@ -5,8 +5,8 @@ interface IState {
   value: string;
 }
 
-class SearchBox extends React.Component<null, IState> {
-  constructor(props: null) {
+class SearchBox extends React.Component<object, IState> {
+  constructor(props: object) {
     super(props);
     this.state = {
       value: '',
