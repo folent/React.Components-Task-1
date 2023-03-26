@@ -3,42 +3,60 @@
     "id": 1,
     "name": "adsadsa",
     "description": "asdsadsadasasdasdsaaasdsadsadasasdasdsaaasdsadsadasasdasdsaa",
-    "count": 332,
-    "price": 22.5
+    "price": 22.5,
+    "createDate": "11/22/2023",
+    "category": "1",
+    "addToSlider": false,
+    "image": null
   },
   {
     "id": 2,
     "name": "hghghghgh",
     "description": "hggggggghgggggggggggggggghggggggggggggggggggggggggg",
-    "count": 10,
-    "price": 99
+    "price": 99,
+    "createDate": "15/02/2023",
+    "category": "2",
+    "addToSlider": true,
+    "image": null
   },
   {
     "id": 3,
     "name": "erwewrwerwe",
     "description": "opopopopopopopopopopopopopopopopopopopopopopopopopopopop",
-    "count": 83,
-    "price": 5.99
+    "price": 5.99,
+    "createDate": "01/05/2021",
+    "category": "1",
+    "addToSlider": true,
+    "image": null
   },
   {
     "id": 4,
     "name": "ytytytytytyt",
     "description": "zxzxzxzzzzzzzzzzzzzzzzzzzzzzzzzzxxzzxzxzxzxz",
-    "count": 83,
-    "price": 5.99
+    "price": 5.99,
+    "createDate": "06/02/2020",
+    "category": "2",
+    "addToSlider": false,
+    "image": null
   },
   {
     "id": 5,
     "name": "ghghghghghg",
     "description": "bvvbvbvbvbvbbvvbvbvbvbvbbvvbvbvbvbvbbvvbvbvbvbvb",
-    "count": 62,
-    "price": 109.99
+    "price": 109.99,
+    "createDate": "05/03/2022",
+    "category": "1",
+    "addToSlider": true,
+    "image": null
   },
   {
     "id": 6,
     "name": "jhkjkjkjkjkjkj",
     "description": "rtrttttttttttttttttrtrttttttttttttttttrtrtttttttttttttttt",
-    "count": 62,
-    "price": 109.99
+    "price": 109.99,
+    "createDate": "02/05/2021",
+    "category": "2",
+    "addToSlider": true,
+    "image": null
   }
 ]
