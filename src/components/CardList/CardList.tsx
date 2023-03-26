@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from '../Card/Card';
-import './cardList.css';
+import styles from './cardList.module.css';
 import { ICardListProps } from './ICardListProps';
 
 class CardList extends React.Component<ICardListProps> {
@@ -10,7 +10,7 @@ class CardList extends React.Component<ICardListProps> {
 
   render() {
     return (
-      <div role="card-list" className="wrapper">
+      <div role="card-list" className={styles.wrapper}>
         {this.props.cards.map((item) => (
           <Card key={item.id.toString()} item={item} />
         ))}
