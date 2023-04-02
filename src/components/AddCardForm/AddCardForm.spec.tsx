@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import NewCardPage from '../../pages/NewCardPage/NewCardPage';
+import userEvent from '@testing-library/user-event';
 
 describe('NewCardPage', () => {
   test('render page', () => {
@@ -22,13 +23,13 @@ describe('NewCardPage', () => {
     fireEvent.click(submitBtn);
   });
 
-  test('check validators', () => {
+  test('check validators', async () => {
     render(<NewCardPage />);
 
     const submitBtn = screen.getByTestId('submit-btn');
     expect(submitBtn).toBeDefined();
-    fireEvent.click(submitBtn);
-    expect(screen.getByText('Name field should not empty').textContent).toBe(
+    await userEvent.click(submitBtn);
+    expect(await screen.getByText('Name field should not empty').textContent).toBe(
       'Name field should not empty'
     );
     expect(screen.getByText('Description field should not empty').textContent).toBe(
@@ -39,12 +40,12 @@ describe('NewCardPage', () => {
     );
   });
 
-  test('add new card', () => {
+  test('add new card', async () => {
     const card = {
       id: 6,
       name: 'jhkjkjkjkjkjkj',
       description: 'rtrttttttttttttttttrtrttttttttttttttttrtrtttttttttttttttt',
-      price: 109.99,
+      price: '109.99',
       createDate: '02/05/2021',
       category: '2',
       addToSlider: true,
@@ -58,12 +59,12 @@ describe('NewCardPage', () => {
     const dateInput = screen.getByTestId('date-input');
     const rulesCheckbox = screen.getByTestId('rules-checkbox');
     const submitBtn = screen.getByTestId('submit-btn');
-    fireEvent.change(nameInput, { target: { value: card.name } });
-    fireEvent.change(descTextarea, { target: { value: card.description } });
-    fireEvent.change(priceInput, { target: { value: card.price } });
-    fireEvent.change(dateInput, { target: { value: '2025-03-24' } });
-    fireEvent.change(rulesCheckbox, { target: { checked: true } });
-    fireEvent.click(submitBtn);
+    await userEvent.type(nameInput, card.name);
+    await userEvent.type(descTextarea, card.description);
+    await userEvent.type(priceInput, card.price);
+    await userEvent.type(dateInput, '2025-03-24');
+    await userEvent.click(rulesCheckbox);
+    await userEvent.click(submitBtn);
     expect(screen.getByText('New card has added!').textContent).toBe('New card has added!');
   });
 });

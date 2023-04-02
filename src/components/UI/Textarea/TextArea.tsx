@@ -1,40 +1,27 @@
 import styles from '../../AddCardForm/AddCardForm.module.css';
 import React from 'react';
+import { FieldError, FieldErrorsImpl, Merge, UseFormRegisterReturn } from 'react-hook-form';
 
 type IProps = {
-  type: string;
-  checked?: boolean;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  register: () => UseFormRegisterReturn<string>;
   className: string;
-  isError: boolean;
-  error: string;
+  error: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
   placeholder?: string;
   dataTestId?: string;
 };
 
-const Input = React.forwardRef(
-  (
-    { type, isError, error, className, placeholder, onChange, value, checked, dataTestId }: IProps,
-    ref: React.ForwardedRef<HTMLInputElement>
-  ) => {
-    return (
-      <div>
-        <input
-          type={type}
-          ref={ref}
-          className={className}
-          onChange={onChange}
-          value={value}
-          checked={checked}
-          placeholder={placeholder}
-          style={{ borderColor: isError ? 'red' : '' }}
-          data-testid={dataTestId}
-        />
-        {isError && <div className={styles.error}>{error}</div>}
-      </div>
-    );
-  }
-);
+const TextArea: React.FC<IProps> = ({ register, error, className, placeholder, dataTestId }) => {
+  return (
+    <div>
+      <textarea
+        {...register()}
+        className={className + ` ${error && styles.errorBorder}`}
+        placeholder={placeholder}
+        data-testid={dataTestId}
+      />
+      {error && <p className={styles.error}>{error.toString()}</p>}
+    </div>
+  );
+};
 
-export default Input;
+export default TextArea;
