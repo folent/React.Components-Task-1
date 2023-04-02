@@ -1,30 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CardList from '../../components/CardList/CardList';
 import cards from '../../db/data.json';
 import SearchBox from '../../components/SearchBox/SearchBox';
-import { IStateHomePage } from './IStateHomePage';
+import { ICard } from '../../Interfaces/ICard';
 
-class HomePage extends React.Component<object, IStateHomePage> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      items: [],
-    };
-  }
-  componentDidMount() {
-    this.setState({
-      items: cards,
-    });
-  }
+const HomePage = (): JSX.Element => {
+  const [items, setItems] = useState<ICard[]>([]);
+  useEffect(() => {
+    setItems(cards);
+  }, []);
 
-  render() {
-    return (
-      <>
-        <h2>Home page</h2>
-        <SearchBox />
-        <CardList cards={this.state.items} />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <h2>Home page</h2>
+      <SearchBox />
+      <CardList cards={items} />
+    </>
+  );
+};
 export default HomePage;
