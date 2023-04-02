@@ -1,253 +1,175 @@
-import React from 'react';
+import React, { useState } from 'react';
 import categories from '../../db/categories.json';
 import styles from './AddCardForm.module.css';
 import { ICard } from '../../Interfaces/ICard';
-import { IProps, IState } from './types';
+import { IProps } from './types';
+import Input from '../UI/Input/Input';
+import TextArea from '../UI/Textarea/TextArea';
+import { useForm } from 'react-hook-form';
 
-class AddCardForm extends React.Component<IProps, IState> {
-  formRef: React.RefObject<HTMLFormElement>;
-  nameRef: React.RefObject<HTMLInputElement>;
-  descRef: React.RefObject<HTMLTextAreaElement>;
-  priceRef: React.RefObject<HTMLInputElement>;
-  dateRef: React.RefObject<HTMLInputElement>;
-  categoryRef: React.RefObject<HTMLSelectElement>;
-  rulesRef: React.RefObject<HTMLInputElement>;
-  addToSliderRef: React.RefObject<HTMLInputElement>;
-  NotAddToSliderRef: React.RefObject<HTMLInputElement>;
-  imageRef: React.RefObject<HTMLInputElement>;
-  constructor(props: IProps) {
-    super(props);
-    this.formRef = React.createRef();
-    this.nameRef = React.createRef();
-    this.descRef = React.createRef();
-    this.priceRef = React.createRef();
-    this.dateRef = React.createRef();
-    this.categoryRef = React.createRef();
-    this.rulesRef = React.createRef();
-    this.addToSliderRef = React.createRef();
-    this.NotAddToSliderRef = React.createRef();
-    this.imageRef = React.createRef();
+type FormData = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  createDate: string;
+  category: string;
+  addToSlider: boolean;
+  notAddToSlider: boolean;
+  image: File[] | null;
+  rules: boolean;
+};
 
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onChangeAddToSlider = this.onChangeAddToSlider.bind(this);
+const AddCardForm: React.FC<IProps> = (props) => {
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
 
-    this.state = {
-      addToSlider: false,
-      showMessage: false,
-      nameEmpty: false,
-      descEmpty: false,
-      priceNotNumber: false,
-      dateEmpty: false,
-      disagreeWithRules: false,
-    };
-  }
-  categoriesList = categories.map((item) => {
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [addToSlider, setAddToSlider] = useState<boolean>(false);
+
+  const categoriesList = categories.map((item) => {
     return (
       <option key={item.id} value={item.id}>
         {item.name}
       </option>
     );
   });
-  showMessage() {
-    this.setState({
-      showMessage: true,
-    });
+  const showSuccessMessage = () => {
+    setShowMessage(true);
     setTimeout(() => {
-      this.setState({
-        showMessage: false,
-      });
+      setShowMessage(false);
     }, 3000);
-  }
-  onChangeAddToSlider(e: React.ChangeEvent<HTMLInputElement>) {
+  };
+  const onChangeAddToSlider = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
     const addToSlider = (target.value === 'add' && target.checked) || false;
-    this.setState({
-      addToSlider,
-    });
-  }
-  resetForm() {
-    this.formRef.current?.reset();
-    this.setState({
-      addToSlider: false,
-    });
-  }
+    setAddToSlider(addToSlider);
+  };
+  const resetForm = () => {
+    reset();
+    setAddToSlider(false);
+  };
 
-  validateCheckboxes(rules: boolean) {
-    this.setState({
-      disagreeWithRules: !rules,
-    });
-    return rules;
-  }
-
-  validateInputForNumber(value: string | undefined) {
-    value = value?.trim();
-    const isNumber = Number(value) > 0;
-    this.setState({
-      priceNotNumber: !isNumber,
-    });
-    return isNumber;
-  }
-
-  validateInputsForEmpty(
-    name: string | undefined,
-    desc: string | undefined,
-    date: string | undefined
-  ) {
-    const isNameEmpty = !name || !name.length;
-    const isDescEmpty = !desc || !desc.length;
-    const isDateEmpty = !date || !date.length;
-
-    this.setState({
-      nameEmpty: isNameEmpty,
-      descEmpty: isDescEmpty,
-      dateEmpty: isDateEmpty,
-    });
-    return !isNameEmpty && !isDescEmpty && !isDateEmpty;
-  }
-  onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const name = this.nameRef.current?.value;
-    const description = this.descRef.current?.value;
-    const price = this.priceRef.current?.value;
-    const date = this.dateRef.current?.value;
-    const category = this.categoryRef.current?.value;
-    const rules = this.rulesRef.current?.checked as boolean;
-    const addToSlider = this.addToSliderRef.current?.checked;
-    const image = this.imageRef.current?.files && this.imageRef.current.files[0];
-
-    if (!this.validateInputsForEmpty(name, description, date)) {
-      return;
-    }
-    if (!this.validateInputForNumber(price)) {
-      return;
-    }
-    if (!this.validateCheckboxes(rules)) {
-      return;
-    }
-
-    const data: ICard = {
+  const onSubmit = (data: FormData) => {
+    const { name, description, price, createDate, category, addToSlider, image } = data;
+    const payload: ICard = {
       id: Number(new Date()),
       name: name ?? '',
       description: description ?? '',
       price: Number(price) ?? 0,
-      createDate: date ?? new Date().toISOString(),
+      createDate: createDate ?? new Date().toISOString(),
       category: category ?? '1',
       addToSlider: addToSlider ?? false,
-      image: (image && URL.createObjectURL(image)) ?? null,
+      image: image && image.length > 0 ? URL.createObjectURL(image[0]) : null,
     };
 
-    this.props.onSubmit(data);
-    this.resetForm();
-    this.showMessage();
-  }
-  render() {
-    const {
-      addToSlider,
-      showMessage,
-      nameEmpty,
-      descEmpty,
-      dateEmpty,
-      disagreeWithRules,
-      priceNotNumber,
-    } = this.state;
-    return (
-      <form
-        onSubmit={this.onSubmit}
-        ref={this.formRef}
-        className={styles.wrapper}
-        role="Add-card-form"
-      >
-        {showMessage && <div>New card has added!</div>}
-        <div>
-          <input
-            type="text"
-            ref={this.nameRef}
-            className={styles.input}
-            placeholder="Title"
-            style={{ borderColor: nameEmpty ? 'red' : '' }}
-            data-testid="name-input"
+    props.onSubmit(payload);
+    resetForm();
+    showSuccessMessage();
+  };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.wrapper} role="Add-card-form">
+      {showMessage && <div className={styles.success}>New card has added!</div>}
+      <Input
+        type={'text'}
+        register={() =>
+          register('name', { required: { value: true, message: 'Name field should not empty' } })
+        }
+        className={styles.input}
+        placeholder={'Title'}
+        error={errors.name?.message || ''}
+        dataTestId={'name-input'}
+      />
+      <TextArea
+        register={() =>
+          register('description', {
+            required: { value: true, message: 'Description field should not empty' },
+          })
+        }
+        className={styles.input}
+        placeholder="Description"
+        error={errors.description?.message}
+        dataTestId={'desc-textarea'}
+      />
+      <Input
+        register={() =>
+          register('price', {
+            validate: (value) => Number(value) > 0,
+          })
+        }
+        type={'text'}
+        className={styles.input}
+        placeholder={'Price'}
+        error={errors.price && 'Price field should be number and more than 0'}
+        dataTestId={'price-input'}
+      />
+      <Input
+        register={() =>
+          register('createDate', {
+            required: { value: true, message: 'Date field should not empty' },
+          })
+        }
+        type={'date'}
+        className={styles.input}
+        error={errors.createDate?.message}
+        dataTestId={'date-input'}
+      />
+      <label>
+        Category
+        <select {...register('category')} className={styles.input}>
+          {categoriesList}
+        </select>
+      </label>
+      <div>
+        <div>Add to slider</div>
+        <label className={styles.label}>
+          Yes
+          <Input
+            register={() => register('addToSlider')}
+            type={'radio'}
+            checked={addToSlider}
+            value={'add'}
+            onChange={onChangeAddToSlider}
           />
-          {nameEmpty && <div className={styles.error}>Name field should not empty</div>}
-        </div>
-        <div>
-          <textarea
-            ref={this.descRef}
+        </label>
+        <label className={styles.label}>
+          No
+          <Input
+            register={() => register('notAddToSlider')}
+            type={'radio'}
+            checked={!addToSlider}
+            value={'notAdd'}
+            onChange={onChangeAddToSlider}
             className={styles.input}
-            placeholder="Description"
-            style={{ borderColor: descEmpty ? 'red' : '' }}
-            data-testid="desc-textarea"
           />
-          {descEmpty && <div className={styles.error}>Description field should not empty</div>}
-        </div>
-        <div>
-          <input
-            ref={this.priceRef}
-            className={styles.input}
-            placeholder="Price"
-            style={{ borderColor: descEmpty ? 'red' : '' }}
-            data-testid="price-input"
-          />
-          {priceNotNumber && (
-            <div className={styles.error}>Price field should be number and more than 0</div>
-          )}
-        </div>
-        <div>
-          <input
-            type="date"
-            ref={this.dateRef}
-            className={styles.input}
-            style={{ borderColor: dateEmpty ? 'red' : '' }}
-            data-testid="date-input"
-          />
-          {dateEmpty && <div className={styles.error}>Date field should not empty</div>}
-        </div>
-        <div>
-          <label>
-            Category
-            <select ref={this.categoryRef} className={styles.input}>
-              {this.categoriesList}
-            </select>
-          </label>
-        </div>
-        <div>
-          <label className={styles.label}>Add to slider</label>
-          <label>
-            Yes
-            <input
-              type="radio"
-              value="add"
-              checked={addToSlider}
-              onChange={this.onChangeAddToSlider}
-              ref={this.addToSliderRef}
-            />
-          </label>
-          <label>
-            No
-            <input
-              type="radio"
-              value="notAdd"
-              checked={!addToSlider}
-              onChange={this.onChangeAddToSlider}
-              ref={this.NotAddToSliderRef}
-            />
-          </label>
-        </div>
-        <div>
-          <label htmlFor="agree">I agree with rules</label>
-          <input type="checkbox" id="agree" ref={this.rulesRef} data-testid="rules-checkbox" />
-          {disagreeWithRules && <div className={styles.error}>You have to agree to the rules</div>}
-        </div>
-        <div>
-          <input type="file" ref={this.imageRef} />
-        </div>
-        <div>
-          <button type="submit" data-testid="submit-btn">
-            Add
-          </button>
-        </div>
-      </form>
-    );
-  }
-}
+        </label>
+      </div>
+      <label className={styles.label}>
+        I agree with rules
+        <Input
+          register={() =>
+            register('rules', {
+              required: { value: true, message: "You have to agree to the rules'" },
+            })
+          }
+          type={'checkbox'}
+          className={styles.input}
+          error={errors.rules?.message}
+          dataTestId={'rules-checkbox'}
+        />
+      </label>
+      <Input register={() => register('image')} type={'file'} />
+      <div>
+        <button type="submit" data-testid="submit-btn">
+          Add
+        </button>
+      </div>
+    </form>
+  );
+};
 
 export default AddCardForm;

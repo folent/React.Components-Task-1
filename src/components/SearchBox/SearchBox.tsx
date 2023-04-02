@@ -1,53 +1,39 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './SearchBox.css';
 
-interface IState {
-  value: string;
-}
+const LAST_SEARCH_VALUE = 'last_search_value';
 
-class SearchBox extends React.Component<object, IState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      value: '',
-    };
-    this.onChange = this.onChange.bind(this);
-  }
+const SearchBox: React.FC = (): JSX.Element => {
+  const [query, setQuery] = useState<string>('');
+  const search = useRef<HTMLInputElement>(null);
 
-  componentDidMount() {
-    window.addEventListener('beforeunload', () => {
-      window.localStorage.setItem('last_search', this.state.value);
-    });
-    const lastSearch = localStorage.getItem('last_search');
-    if (lastSearch) {
-      this.onChange(lastSearch);
+  useEffect(() => {
+    const lastSearchValue = localStorage.getItem(LAST_SEARCH_VALUE);
+    const searchRef: HTMLInputElement | null = search.current;
+
+    if (lastSearchValue) {
+      setQuery(lastSearchValue);
     }
-  }
-  componentWillUnmount() {
-    window.localStorage.setItem('last_search', this.state.value);
-    window.removeEventListener('beforeunload', () => {
-      window.localStorage.setItem('last_search', this.state.value);
-    });
-  }
+    return () => {
+      setLocalStorageValue(LAST_SEARCH_VALUE, searchRef?.value || '');
+    };
+  }, []);
 
-  onChange(value: string) {
-    this.setState({
-      value,
-    });
-  }
+  const setLocalStorageValue = (key: string, value: string) => {
+    window.localStorage.setItem(key, value);
+  };
 
-  render() {
-    return (
-      <>
-        <input
-          type="search"
-          className="search"
-          value={this.state.value}
-          onChange={(e) => this.onChange(e.target.value)}
-        />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <input
+        type="search"
+        className="search"
+        value={query}
+        ref={search}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+    </>
+  );
+};
 
 export default SearchBox;

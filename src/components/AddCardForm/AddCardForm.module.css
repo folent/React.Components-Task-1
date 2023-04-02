@@ -7,8 +7,15 @@
   box-sizing: border-box;
 }
 
+.success {
+  color: green;
+  font-size: 24px;
+}
+
 .label {
   margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .input {
@@ -29,4 +36,7 @@
   max-width: 250px;
   border-radius: 4px;
   margin: 0 auto;
+}
+.errorBorder {
+  border-color: red;
 }
