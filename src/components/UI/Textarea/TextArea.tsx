@@ -5,7 +5,7 @@ import { FieldError, FieldErrorsImpl, Merge, UseFormRegisterReturn } from 'react
 type IProps = {
   register: () => UseFormRegisterReturn<string>;
   className: string;
-  error: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+  error: string | FieldError | Merge<FieldError, FieldErrorsImpl> | undefined;
   placeholder?: string;
   dataTestId?: string;
 };

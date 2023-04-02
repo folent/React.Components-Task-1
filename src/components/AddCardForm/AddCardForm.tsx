@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import categories from '../../db/categories.json';
 import styles from './AddCardForm.module.css';
 import { ICard } from '../../Interfaces/ICard';
@@ -7,13 +7,26 @@ import Input from '../UI/Input/Input';
 import TextArea from '../UI/Textarea/TextArea';
 import { useForm } from 'react-hook-form';
 
+type FormData = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  createDate: string;
+  category: string;
+  addToSlider: boolean;
+  notAddToSlider: boolean;
+  image: File[] | null;
+  rules: boolean;
+};
+
 const AddCardForm: React.FC<IProps> = (props) => {
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [addToSlider, setAddToSlider] = useState<boolean>(false);
@@ -41,7 +54,7 @@ const AddCardForm: React.FC<IProps> = (props) => {
     setAddToSlider(false);
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormData) => {
     const { name, description, price, createDate, category, addToSlider, image } = data;
     const payload: ICard = {
       id: Number(new Date()),
@@ -51,11 +64,11 @@ const AddCardForm: React.FC<IProps> = (props) => {
       createDate: createDate ?? new Date().toISOString(),
       category: category ?? '1',
       addToSlider: addToSlider ?? false,
-      image: image.length > 0 ? URL.createObjectURL(image[0]) : null,
+      image: image && image.length > 0 ? URL.createObjectURL(image[0]) : null,
     };
 
     props.onSubmit(payload);
-    // resetForm();
+    resetForm();
     showSuccessMessage();
   };
   return (
@@ -68,7 +81,7 @@ const AddCardForm: React.FC<IProps> = (props) => {
         }
         className={styles.input}
         placeholder={'Title'}
-        error={errors.name?.message}
+        error={errors.name?.message || ''}
         dataTestId={'name-input'}
       />
       <TextArea

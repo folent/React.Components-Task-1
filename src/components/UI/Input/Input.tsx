@@ -9,7 +9,7 @@ type IProps = {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  error?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+  error?: string | FieldError | Merge<FieldError, FieldErrorsImpl> | undefined;
   placeholder?: string;
   dataTestId?: string;
 };
