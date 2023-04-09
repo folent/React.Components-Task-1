@@ -1,0 +1,46 @@
+.card {
+  /*width: 100%;*/
+  flex-basis: 29%;
+  /*box-shadow: 0 0 6px 2px #cccccc;*/
+  padding: 10px;
+  text-align: left;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.card img {
+  width: 100%;
+  max-height: 300px;
+  height: 100%;
+}
+
+.card p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 0 12px 2px #cccccc;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+
+.prodCompany img {
+  width: 50px;
+}
+.prodCompanies {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  overflow: auto;
+}
+
+.prodCompany {
+  margin-left: 15px;
+}
+.prodCompany:first-child {
+  margin-left: 0;
+}
+.prodCompany img {
+  width: 100px;
+}

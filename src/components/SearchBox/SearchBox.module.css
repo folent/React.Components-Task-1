@@ -6,3 +6,11 @@
   border-radius: 128px;
   font-style: italic;
 }
+
+.result {
+  position: fixed;
+  background-color: #fff;
+  left: 23%;
+  width: 100%;
+  max-width: 740px;
+}
