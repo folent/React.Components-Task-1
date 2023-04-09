@@ -40,7 +40,7 @@ const SearchBox: React.FC<IProps> = ({
       })
       .catch(() => setError('Data is not found'))
       .finally(() => setIsLoading(false));
-  }, [page, setError, setIsLoading, setItems, setTotalPages]);
+  }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const lastSearchValue = localStorage.getItem(LAST_SEARCH_VALUE);
