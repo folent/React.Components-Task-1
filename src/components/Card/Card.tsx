@@ -1,11 +1,13 @@
 import React from 'react';
 import { ICard } from '../../Interfaces/ICard';
-import './card.css';
+import styles from './Card.module.css';
 import noImage from '../../assets/no-image.svg';
-import categories from '../../db/categories.json';
+import CardDescription from './CardDescription';
 
 interface IProps {
   item: ICard;
+  setActiveCard?: (id: string) => void;
+  isDetailed?: boolean;
 }
 
 class Card extends React.Component<IProps> {
@@ -13,23 +15,25 @@ class Card extends React.Component<IProps> {
     super(props);
   }
 
-  getNameCategory(id: string | undefined) {
-    if (!id) return;
-    return categories.find((c) => c.id.toString() === id)?.name;
-  }
-
   render() {
     const card = this.props.item;
+    const isDetailed = this.props.isDetailed;
+    const setActiveCard = this.props.setActiveCard;
     return (
-      <div className="card">
+      <div
+        className={styles.card}
+        onClick={() => (setActiveCard ? setActiveCard(String(card.id)) : null)}
+      >
         <div>
-          <img src={card.image ?? noImage} alt="No image" />
+          <img
+            src={card.poster_path ? `https://image.tmdb.org/t/p/w500/${card.poster_path}` : noImage}
+            alt="No image"
+          />
         </div>
-        <div role="name">{card.name}</div>
-        <p role="desc">{card.description}</p>
-        <div>{this.getNameCategory(card.category)}</div>
-        <div>{card.createDate}</div>
-        <strong>{card.price}</strong>
+        <div role="name">{card.title}</div>
+        <div>Release Date: {card.release_date}</div>
+        <strong>Rating: {card.vote_average} &#9733;</strong>
+        {isDetailed && <CardDescription card={card} />}
       </div>
     );
   }

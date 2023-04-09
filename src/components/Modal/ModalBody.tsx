@@ -1,18 +1,22 @@
 import React, { FC } from 'react';
-import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
 
 type IProps = {
   children: React.ReactNode;
+  onClose: () => void;
 };
 
-const Modal: FC<IProps> = (props) => {
-  const modalRoot = document.getElementById('modal-root');
-  if (modalRoot) {
-    modalRoot.className = styles.modal;
-    return ReactDOM.createPortal(props.children, modalRoot);
-  }
-  return <div>Error</div>;
+const ModalBody: FC<IProps> = (props) => {
+  return (
+    <div className={styles.modal}>
+      <div className={styles.controls}>
+        <span onClick={props.onClose} className={styles.closeButton}>
+          &times;
+        </span>
+      </div>
+      {props.children}
+    </div>
+  );
 };
 
-export default Modal;
+export default ModalBody;

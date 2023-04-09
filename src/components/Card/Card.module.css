@@ -28,3 +28,19 @@
 .prodCompany img {
   width: 50px;
 }
+.prodCompanies {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  overflow: auto;
+}
+
+.prodCompany {
+  margin-left: 15px;
+}
+.prodCompany:first-child {
+  margin-left: 0;
+}
+.prodCompany img {
+  width: 100px;
+}
